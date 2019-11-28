@@ -1,0 +1,26 @@
+{
+	"name": "nodecli",
+	"version": "1.0.0",
+	"description": "CLI tool for buildingboilerplate codes for express application",
+	"main": "lib/index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/tolumide-ng/node-express-cli.git"
+	},
+	"bin": {
+		"create": "./bin/index.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/tolumide-ng/node-express-cli/issues"
+	},
+	"homepage": "https://github.com/tolumide-ng/node-express-cli#readme",
+	"dependencies": {
+		"create": "0.0.2"
+	}
+}
