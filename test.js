@@ -1,165 +1,86 @@
-#!/usr/bin/env node
-const fs = require('fs');
-const readline = require('readline');
-const events = require('events');
-const { exec } = require('child_process');
-const [, , ...args] = process.argv;
+const chalk = require('chalk');
+const clear = require('clear');
+const figlet = require('figlet');
+const inquirer = require('inquirer');
 
+const clui = require('clui');
+const Spinner = clui.Spinner;
 
-const questionsArr = [
-  {
-    question: 'Project name (Enter D to use default settings): ',
-    key: 'name',
-  },
-  {
-    question: 'Description (Enter D to use default settings): ',
-    key: 'description',
-  },
-  {
-    question: 'Author(s) (Enter D to use default settings): ',
-    key: 'author',
-  },
-  {
-    question: 'Root dir of the project (Enter D to use default settings): ',
-    key: 'root',
-  },
-];
+const packageSpinner = new Spinner('Instaling Packages...');
+const serverSpinner = new Spinner('Instaling Packages...');
 
-class interactive extends events.EventEmitter {
-  constructor(questions) {
-    super();
-    this.questions = questions;
-    this.interface = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-    this._count = 0;
-    this.projectInfo = {
-      name: '',
-      description: '',
-      author: '',
-      root: 'src',
-    };
-  }
- 
-  getInfo() {
-    this.on('getQuest', data => {
-      this.interface.question(data, answer => {
-        this.projectInfo[this.questions[this._count++].key] = answer;
-        if(answer.toUpperCase() === 'D') {
-            this._count = this.questions.length;
+clear();
+
+const getProjectInfo = () => {
+  const questions = [
+    {
+      type: 'input',
+      name: 'name',
+      message: 'Enter a name for the Application:',
+      default: 'express-app',
+    },
+    {
+      type: 'input',
+      name: 'description',
+      default: '',
+      message: 'Enter a description of the repository:',
+    },
+    {
+      type: 'input',
+      name: 'author',
+      default: '',
+      message: 'Authors:',
+    },
+    {
+      type: 'input',
+      name: 'root',
+      default: 'src',
+      message: 'Enter the name of your root directory:',
+      validate: function(input) {
+        if (input.length < 3) {
+          return 'Please your root folder name should be more than two characters';
         }
-        if (this.questions[this._count]) {
-          this.emit('getQuest', this.questions[this._count].question);
-        } else {
-          this.interface.close();
-          this.emit('done', this.projectInfo);
-        }
-      });
-    });
+        return true;
+      },
+    },
+  ];
+  return inquirer.prompt(questions);
+};
 
-    this.emit('getQuest', this.questions[this._count].question);
-  }
-}
+getProjectInfo().then(answers => {
+  console.log(answers);
 
-const read = new interactive(questionsArr);
-read.getInfo();
-read.on('done', data => {
-    console.log({ data })
-})
+  packageSpinner.start();
 
-module.exports = {
-    interactive,
-    questionsArr
-}
-// const projSetup = {};
+  setTimeout(() => {
+    packageSpinner.stop();
+    console.log(chalk.blue.bold(`\tPackages successfully installed 👍`));
+    console.log(
+      chalk.greenBright(
+        `\n\tServer is running on port 4000. Go to ${chalk.blue.bold.underline(
+          'http://localhost:4000/'
+        )}`
+      )
+    );
+  }, 5000);
 
-// read.on('getQuest', data => {
-//   read.interface.question(data, answer => {
-//     projSetup[questionsArr[count++].key] = answer;
-//     if (questionsArr[count]) {
-//       read.emit('getQuest', questionsArr[count].question);
-//     } else {
-//       console.log({ projSetup });
-//       read.interface.close();
-//     }
-//   });
-// });
-
-// read.emit('getQuest', questionsArr[count].question);
-
-// if(args[0] === 'init') {
-//     // run init function
-//     const projectInfo = {
-//         name: '',
-//         description: '',
-//         author: '',
-//       };
-
-//       const generatePackage = project => {
-//         const data = `{
-//           "name": "${project.name}",
-//           "version": "1.0.0",
-//           "description": "${project.description}",
-//           "author": "${project.author}",
-//           "license": "MIT",
-//           "scripts": {
-//             "start": "babel-node server/index"
-//           }
-//         }
-//       `;
-//         fs.writeFileSync('package.json', data, {
-//           flag: 'w',
-//         });
-//         fs.writeFileSync('.babelrc', babeldata, {
-//             flag: 'w',
-//           })
-
-//       };
-
-//       const rl = readline.createInterface({
-//         input: process.stdin,
-//         output: process.stdout,
-//       });
-
-//       class interactive extends events.EventEmitter {
-//           constructor () {
-//              this.interface = readline.createInterface({
-//                 input: process.stdin,
-//                 output: process.stdout,
-//               });
-//           }
-//       }
-
-//       const readInterface = new interactive();
-
-//       readInterface.on('write', (data) => {
-//           readInterface.question(data, answer => {
-//               console.log(answer);
-
-//            readInterface.emit('write', 'your question');
-//           })
-//       })
-//     //   rl.question('Project name:  ', answer => {
-//     //     projectInfo.name = answer;
-//     //     rl.question('Give a brief description? ', answer => {
-//     //       projectInfo.description = answer;
-//     //       rl.question('Author(s): ', answer => {
-//     //         rl.close();
-//     //         projectInfo.author = answer;
-//     //         generatePackage(projectInfo);
-//     //         console.log(`installing....`);
-//     //         exec('npm i express', {cwd: process.cwd()} ,(error, stdout, stderr) => {
-//     //           if (error) {
-//     //             console.error(`exec error: ${error}`);
-//     //             return;
-//     //           }
-//     //           console.error(`output: ${stdout}`);
-//     //         });
-//     //       });
-//     //     });
-//     //   });
-
-// }
-
-// npm i express babel
+  const intro = () => {
+    console.log(
+      chalk.greenBright.bold(
+        figlet.textSync('Create Server', {
+          font: 'JS Stick Letters',
+        })
+      )
+    );
+    console.log(
+      chalk.cyanBright(
+        '\n\tA CLI Tool for building boilerplate codes for your express application'
+      )
+    );
+    console.log(
+      chalk.cyanBright(
+        `\tTo Get Started ${chalk.greenBright('Follow These Instruction\n')} `
+      )
+    );
+  };
+});
