@@ -11,8 +11,7 @@
 		"url": "git+https://github.com/tolumide-ng/node-express-cli.git"
 	},
 	"bin": {
-		"create": "./bin/index.js",
-		"test-server": "./test.js"
+		"node-artisan": "./bin/index.js"
 	},
 	"keywords": [],
 	"author": "",
