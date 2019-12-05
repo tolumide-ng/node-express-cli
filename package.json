@@ -11,7 +11,7 @@
 		"url": "git+https://github.com/tolumide-ng/node-express-cli.git"
 	},
 	"bin": {
-		"create": "./bin/index.js"
+		"node-artisan": "./bin/index.js"
 	},
 	"keywords": [],
 	"author": "",
@@ -21,6 +21,11 @@
 	},
 	"homepage": "https://github.com/tolumide-ng/node-express-cli#readme",
 	"dependencies": {
-		"create": "0.0.2"
+		"chalk": "^3.0.0",
+		"clear": "^0.1.0",
+		"clui": "^0.3.6",
+		"create": "0.0.2",
+		"figlet": "^1.2.4",
+		"inquirer": "^7.0.0"
 	}
 }
