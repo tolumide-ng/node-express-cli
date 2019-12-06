@@ -5,7 +5,8 @@
 	"main": "lib/index.js",
 	"scripts": {
 		"test": "jest --detectOpenHandles --verbose --coverage --forceExit",
-		"watch": "jest --watch"
+		"watch": "jest --watch",
+		"coverage": "jest --forceExit --coverage && cat ./test/coverage/lcov.info | coveralls"
 	},
 	"repository": {
 		"type": "git",
@@ -30,6 +31,7 @@
 		"inquirer": "^7.0.0"
 	},
 	"devDependencies": {
+		"coveralls": "^3.0.9",
 		"jest": "^24.9.0"
 	}
 }
