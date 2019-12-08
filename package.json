@@ -4,7 +4,9 @@
 	"description": "CLI tool for buildingboilerplate codes for express application",
 	"main": "lib/index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "jest --detectOpenHandles --verbose --coverage --forceExit",
+		"watch": "jest --watch",
+		"coverage": "jest --forceExit --coverage && cat ./test/coverage/lcov.info | coveralls"
 	},
 	"repository": {
 		"type": "git",
@@ -27,5 +29,9 @@
 		"create": "0.0.2",
 		"figlet": "^1.2.4",
 		"inquirer": "^7.0.0"
+	},
+	"devDependencies": {
+		"coveralls": "^3.0.9",
+		"jest": "^24.9.0"
 	}
 }
